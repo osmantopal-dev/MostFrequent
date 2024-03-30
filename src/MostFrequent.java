@@ -52,7 +52,7 @@ public class MostFrequent {
 
     private void CreateFile(String filePath){
         try {
-            File myObj = new File("filePath");
+            File myObj = new File(filePath);
             if (myObj.createNewFile()) {
               System.out.println("File created: " + myObj.getName());
             } else {
