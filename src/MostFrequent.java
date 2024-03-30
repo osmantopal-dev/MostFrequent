@@ -5,10 +5,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+//import com.twilio.Twilio;
+//import com.twilio.rest.api.v2010.account.Message;
+//import com.twilio.type.PhoneNumber;
 
 public class MostFrequent {
 
-    private static List<String> ReadFile(String fileName){
+    private  List<String> ReadFile(String fileName){
         List<String> words = new ArrayList<>();
         BufferedReader reader = null;
 
@@ -35,7 +38,7 @@ public class MostFrequent {
         return words;
     }
 
-    private static List<String> GenerateDailyWords(List<String> learnedWords, List<String> words){
+    private  List<String> GenerateDailyWords(List<String> learnedWords, List<String> words){
         List<String> dailyWords = new ArrayList<>();
         Random random = new Random();
         while(dailyWords.size() != 50) {
@@ -47,14 +50,45 @@ public class MostFrequent {
         return dailyWords;
     }
 
+    private void CreateFile(String filePath){
+        try {
+            File myObj = new File("filePath");
+            if (myObj.createNewFile()) {
+              System.out.println("File created: " + myObj.getName());
+            } else {
+              System.out.println("File already exists.");
+            }
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+    }
+    
+    private  void WriteFile(List<String> dailyWords, String filePath){
+        CreateFile(filePath);
+        try {
+            FileWriter myWriter = new FileWriter(filePath);
+            for(int i = 0;i < dailyWords.size();i++){
+                myWriter.write(dailyWords.get(i));
+                if(i != dailyWords.size() - 1){
+                    myWriter.write("\n");
+                }
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+    }
     
 
     public static void main(String[] args) throws Exception {
+        MostFrequent instance = new MostFrequent();
         String fileName = "mostfrequent.txt";
         List<String> learnedWords = new ArrayList<>();
-        GenerateDailyWords(learnedWords, ReadFile(fileName));
-        
-
+        instance.GenerateDailyWords(learnedWords, instance.ReadFile(fileName));
+        instance.WriteFile(instance.GenerateDailyWords(learnedWords, instance.ReadFile(fileName)), "DailyWords.txt");
 
     }
 }
